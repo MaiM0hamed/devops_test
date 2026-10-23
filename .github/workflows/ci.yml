@@ -1,26 +1,26 @@
+
 name: Docker CI
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+      - develop
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Check Docker version
-              run: docker --version
+      - name: Build Docker image
+        run: |
+          IMAGE_TAG="${GITHUB_REF_NAME}"
+          docker build -t "devops-test:${IMAGE_TAG}" .
 
-            - name: Build Docker image
-              run: docker build -t devops-test:latest .
-
-            - name: Test Docker image
-              run: docker run --rm devops-test:latest
+      - name: Test Docker image
+        run: |
+          IMAGE_TAG="${GITHUB_REF_NAME}"
+          docker run --rm "devops-test:${IMAGE_TAG}"
