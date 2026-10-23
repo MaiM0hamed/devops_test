@@ -1,0 +1,26 @@
+name: Docker CI
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Check Docker version
+              run: docker --version
+
+            - name: Build Docker image
+              run: docker build -t devops-test:latest .
+
+            - name: Test Docker image
+              run: docker run --rm devops-test:latest
